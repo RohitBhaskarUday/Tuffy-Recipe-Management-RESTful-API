@@ -1,27 +1,30 @@
-from flask import Flask, jsonify,request,render_template
+from flask import Flask, jsonify,request
 from app import Recipes,db, Users #class models from app
-from flask_jwt_extended import JWTManager, jwt_required, create_access_token, get_jwt_identity
-from werkzeug.utils import secure_filename
+from flask_jwt_extended import JWTManager, jwt_required, create_access_token, get_jwt_identity #for jwt authentication
+from werkzeug.utils import secure_filename #working with files
 import os
 
 api = Flask(__name__)
 
 api.config["JWT_SECRET_KEY"] = "world999$"  #configure the JWT
-jwt = JWTManager(api)
+jwt = JWTManager(api) 
 
 
 api.config["SQLALCHEMY_DATABASE_URI"]="mysql://root:world999%24@localhost/recipedb"
-api.config['SQLALCHEMY_TRACK_MODIFICATIONS']=False
+api.config['SQLALCHEMY_TRACK_MODIFICATIONS']=False 
 db.init_app(api) #initializing the db
 
-UPLOAD_FOLDER = ""
-api.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-api.config['MAX_CONTENT_LENGTH'] = 4 * 1024 * 1024
-allowed_types = ['jpg', 'png', 'gif','pdf','jpeg','txt']
+#UPLOAD_FOLDER = "C:/Users/Rohit/OneDrive/Desktop/Tuffy Recipe Managment RESTful API/recipe folder" #ensure you use "/" slash while writing the path 
+api.config['UPLOAD_FOLDER'] = os.path.join(api.root_path, 'static/recipe_files') #setting the path
+# setting 4 MB as maximum file upload size.
+api.config['MAX_CONTENT_LENGTH'] = 2 * 1024 * 1024 
+allowed_types = ['jpg', 'png', 'gif','pdf','jpeg','txt'] #all the allowed file types that can be uploaded.
 
+
+#initial route to present the recipe application
 @api.route('/',methods=['GET'])
 def index():
-  return "<h1>Welcome to Recipe Management</h1> Try adding <code>/recipes</code> in the URL to view all the available recipes and prepare good food. "
+  return "<h1>Welcome to Recipe Management</h1> Try adding <code>/recipes</code> in the URL to view all the available recipes"
   
 
 #GET(Public) method that displays all the recipe names present. Only authorized users would be able to view the recipe instructions which is a protected endpoint.
@@ -31,17 +34,17 @@ def get_recipes():
         recipes = Recipes.query.all()
         output = [] #empty list for appending the recipes to display.
         for recipe in recipes:
-            recipe_data = {'id': recipe.id, 'recipe_name': recipe.recipe_name}
+            recipe_data = {'id': recipe.id, 'recipe_name': recipe.recipe_name} #displays recipe name with unique id.
             output.append(recipe_data)
         if not output:
-            return jsonify({'message': 'No recipes found'}), 404
+            return jsonify({'message': 'No recipes found'}), 404 
         return jsonify({'recipes': output})
     except Exception as e:
         return jsonify({'error': str(e)}), 500
   
 
 #POST method to insert/create the recipe name and instructions into the system.
-@api.route('/recipes',methods=['POST']) 
+@api.route('/recipes',methods=['POST'])
 def add_recipe():
     try:
         data = request.get_json()
@@ -110,12 +113,13 @@ def not_found(error):
 @api.errorhandler(500)
 def internal_server_error(error):
     return jsonify({'error': 'There has been an internal server error.'}), 500
-  
+
+#409 for existing resource
 @api.errorhandler(409)
 def conflict_error(error):
     return jsonify({'error': 'Resource already exists.'}), 409
 
-
+#405 for not allowed endpoints
 @api.errorhandler(405)
 def method_not_allowed_error(error):
     return jsonify({'error': 'Method not allowed for this requested URL'}), 405
@@ -141,14 +145,14 @@ def register():
     return jsonify({"message": "User registered successfully"})
 
 
-#Users to login 
+#Users to login and generate the Auth Token.
 @api.route("/login", methods=["POST"])
 def login():
     data = request.get_json()
     username = data.get("username")
     password = data.get("password")
     user = Users.query.filter_by(username=username, password=password).first()
-    if user and user.check_password(password):
+    if user:
         access_token = create_access_token(identity=username)
         return jsonify(access_token=access_token)
     else:
@@ -158,7 +162,7 @@ def login():
 @api.route("/protected", methods=["GET"])
 @jwt_required()
 def protected():
-    current_user = get_jwt_identity()
+    current_user = get_jwt_identity() #to check which user has loggedin
     return jsonify(logged_in_as=current_user), 200
 
 #Protected endpoint for auth users to access all the recipes and their respective instructions
@@ -182,32 +186,30 @@ def get_protected_recipes():
         return jsonify({'error': str(e)}), 500
 
 
-#Recipe instructions to be uploaded in the form of files
+#Recipe instructions to be uploaded in the form of files and checking its file data-types.
 def permitted_document_types(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in allowed_types
 
 
-#upload method
-@api.route('/upload', methods=['POST'])
+#Recipe file upload method to save the different types of recipes onto a secure folder.
+@api.route('/fileupload', methods=['POST'])
 def upload_folder():
   try:
         if request.method == 'POST':
-            # Handle file sync and save it to the recipe folder
+            # Handle file and save it to the recipe folder
             file = request.files['file']
-            if file and permitted_document_types(file.filename) and len(file.read()) < api.config["MAX_CONTENT_LENGTH"]:
-                filename = secure_filename(file.filename)
-                file.save(os.path.join(api.config['UPLOAD_FOLDER'], filename))
-                return jsonify({"message": "File uploaded successfully"}), 200
+            if file and permitted_document_types(file.filename):
+                file_size = len(file.read())
+                if file_size > api.config["MAX_CONTENT_LENGTH"]: #check if the file is greater than 2 MB or not 
+                    return jsonify({"message": "File too big to upload. Ensure it is a maximum of 2 MB"}), 400 
+                else:
+                    filename = secure_filename(file.filename)
+                    file.save(os.path.join(api.config['UPLOAD_FOLDER'], filename))
+                    return jsonify({"message": "File uploaded successfully"}), 200
 
         return jsonify({"message": "Failed to upload the file"}), 400
   except Exception as e:
       return jsonify({"message": "An error occurred while uploading the file", "error": str(e)}), 500
-
-
-
-
-  
-
 
 
 

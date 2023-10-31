@@ -1,7 +1,17 @@
-Python
-Flask - setup environment variable, initialize it.
-MySQL server, MySQL Workbench, set up the environment 
-SQL-Alchemy- create models, define the model, add data using post method.
-jsonify, request
+Python - pip install python 
 
+Flask - setup environment variable, initialize it. - pip install flask, `.\venv\Scripts\activate.bat`
 
+MySQL server, MySQL Workbench, set up the environment variable inorder for your SQL instance to run. MySQL Website
+
+SQL-Alchemy- create models, define the model, add data using post method. - pip install -U flask-sqlalchemy, pip install Flask-SQLAlchemy
+
+JWT Authentication - pip install flask-jwt-extended
+
+JWTManager, jwt_required, create_access_token, get_jwt_identity - for Authentication
+
+from werkzeug.utils import secure_filename - for working with files
+
+os module from python to ensure the directory while uploading the file.
+
+jsonify and request for sending the data format.

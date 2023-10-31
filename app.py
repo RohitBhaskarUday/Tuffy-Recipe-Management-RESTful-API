@@ -1,7 +1,6 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import DeclarativeBase
-from werkzeug.security import generate_password_hash, check_password_hash
 
 class Base(DeclarativeBase): #constructor for creating the database object.
   pass
@@ -26,11 +25,6 @@ class Users(db.Model):
     username = db.Column(db.String(50), unique=True, nullable=False)
     password = db.Column(db.String(80), nullable=False)
     
-    def set_password(self, password):
-      self.password = generate_password_hash(password)
-    
-    def check_password(self, password):
-      return check_password_hash(self.password, password)
 
 
 #run server
