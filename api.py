@@ -14,10 +14,10 @@ api.config["SQLALCHEMY_DATABASE_URI"]="mysql://root:world999%24@localhost/recipe
 api.config['SQLALCHEMY_TRACK_MODIFICATIONS']=False
 db.init_app(api) #initializing the db
 
-
-
-
-
+UPLOAD_FOLDER = ""
+api.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+api.config['MAX_CONTENT_LENGTH'] = 4 * 1024 * 1024
+allowed_types = ['jpg', 'png', 'gif','pdf','jpeg','txt']
 
 @api.route('/',methods=['GET'])
 def index():
@@ -182,7 +182,26 @@ def get_protected_recipes():
         return jsonify({'error': str(e)}), 500
 
 
+#Recipe instructions to be uploaded in the form of files
+def permitted_document_types(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in allowed_types
 
+
+#upload method
+@api.route('/upload', methods=['POST'])
+def upload_folder():
+  try:
+        if request.method == 'POST':
+            # Handle file sync and save it to the recipe folder
+            file = request.files['file']
+            if file and permitted_document_types(file.filename) and len(file.read()) < api.config["MAX_CONTENT_LENGTH"]:
+                filename = secure_filename(file.filename)
+                file.save(os.path.join(api.config['UPLOAD_FOLDER'], filename))
+                return jsonify({"message": "File uploaded successfully"}), 200
+
+        return jsonify({"message": "Failed to upload the file"}), 400
+  except Exception as e:
+      return jsonify({"message": "An error occurred while uploading the file", "error": str(e)}), 500
 
 
 
