@@ -1,0 +1,7 @@
+Python
+Flask - setup environment variable, initialize it.
+MySQL server, MySQL Workbench, set up the environment 
+SQL-Alchemy- create models, define the model, add data using post method.
+jsonify, request
+
+
