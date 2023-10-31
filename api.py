@@ -17,7 +17,7 @@ db.init_app(api) #initializing the db
 #UPLOAD_FOLDER = "C:/Users/Rohit/OneDrive/Desktop/Tuffy Recipe Managment RESTful API/recipe folder" #ensure you use "/" slash while writing the path 
 api.config['UPLOAD_FOLDER'] = os.path.join(api.root_path, 'static/recipe_files') #setting the path
 # setting 4 MB as maximum file upload size.
-api.config['MAX_CONTENT_LENGTH'] = 4 * 1024 * 1024 
+api.config['MAX_CONTENT_LENGTH'] = 2 * 1024 * 1024 
 allowed_types = ['jpg', 'png', 'gif','pdf','jpeg','txt'] #all the allowed file types that can be uploaded.
 
 
@@ -200,8 +200,8 @@ def upload_folder():
             file = request.files['file']
             if file and permitted_document_types(file.filename):
                 file_size = len(file.read())
-                if file_size > api.config["MAX_CONTENT_LENGTH"]: #check if the file is greater than 4MB or not 
-                    return jsonify({"message": "File too big to upload. Ensure it is a maximum of 4MB"}), 400 
+                if file_size > api.config["MAX_CONTENT_LENGTH"]: #check if the file is greater than 2 MB or not 
+                    return jsonify({"message": "File too big to upload. Ensure it is a maximum of 2 MB"}), 400 
                 else:
                     filename = secure_filename(file.filename)
                     file.save(os.path.join(api.config['UPLOAD_FOLDER'], filename))
