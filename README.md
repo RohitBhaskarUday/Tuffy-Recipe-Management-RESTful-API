@@ -35,5 +35,12 @@ Accessing the Application Once the application is running, you can access it by 
 - /protected: A protected endpoint to check the current user's identity using the JWT access token.
 - /protected/recipes (protected): Allows authorized users to access all recipes, including their instructions.
 # Error Handlers
- Define error handlers for HTTP status codes 400 (Bad Request), 401 (Unauthorized), 404 (Not Found), 500 (Internal Server Error), and 409 (Conflict Error). These handlers return appropriate error messages.You can access different routes to test these error responses, such as: • /unauthorized to simulate a 401 error (Unauthorized) • /check_age to check if a provided age is valid (with potential 400 error) • /trigger_error to simulate a 500 error (Internal Server Error) • The application responds with appropriate error messages based on the route you access.
+ Define error handlers for HTTP status codes 400 (Bad Request), 401 (Unauthorized), 404 (Not Found), 500 (Internal Server Error), and 409 (Conflict Error). These handlers return appropriate error messages.You can access different routes to test these error responses, such as: Failed to upload the file(400), File uploaded successfully(200),No recipes found (404), Invalid credentials (401).
+# Authentication
+- User Registration: Users can register with a unique username and password.
+- User Login: Users can log in with their credentials to obtain a JWT access token.
+- JWT Protection: Certain endpoints are protected and require a valid JWT access token for access.
+# Documentation
+
+
 
