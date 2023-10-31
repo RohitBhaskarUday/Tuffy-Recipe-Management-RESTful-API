@@ -3,8 +3,7 @@
 # Project Description
 ####  We  created a Flask framework for building a Recipe Management RESTful-API. This API allows users to perform various CRUD operations, including robust error handling, strong JWT (JSON Web Token) authentication for secure user access, and secure file handling with validations on file types and sizes.This Readme file includes a detailed instructions for easy setup and deployment of python based template for creating Flask APIs.       
 ### Drive Link For the Project Demonstration and Screenshots
-
-
+https://drive.google.com/drive/folders/1V91bK2SkMDxMbVTTWxr73a3gPDZBCbwL?usp=drive_link
 # Features
 - View a list of available recipes.
 - Add new recipes with names and instructions.
@@ -16,9 +15,10 @@
 - Serving and downloading uploaded recipe files.
 # Getting Started
 - Clone or download this repository to your local machine.
-- Create a MySQL database named recipedb (you can modify the database URI in the code).
+- Create a MySQL database named recipedb 
 - Configure the UPLOAD_FOLDER to specify the folder where uploaded files will be stored.
-- The API should be running on http://localhost:5000/.
+- The API should be running on http://127.0.0.1:5000/
+- To run the flask application initialize the virtual environment by `.\venv\Scripts\activate.bat` command and then run `python api.py` command to start your local as `http://127.0.0.1:5000/`
 # Error Handlers
  Define error handlers for HTTP status codes 400 (Bad Request), 401 (Unauthorized), 404 (Not Found), 500 (Internal Server Error), and 409 (Conflict Error). These handlers return appropriate error messages.You can access different routes to test these error responses, such as: Failed to upload the file(400), File uploaded successfully(200),No recipes found (404), Invalid credentials (401).
 # Authentication
