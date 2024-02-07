@@ -1,5 +1,5 @@
 # Tuffy-Recipe-Managment-RESTful-API
-Tuffy the Titan is CALIFORNIA STATE UNIVERSITY FULLERTON's mascot meaning strong, passionate, driven – yet friendly, affable, and welcoming.
+Tuffy the Titan is CALIFORNIA STATE UNIVERSITY FULLERTON's mascot meaning strong, passionate, driven – yet friendly, affable, and welcoming. We have build a recipe management API where we can gather all the recipes from different culture and traditions through which students are able to experience all kinds of foods across the globe. 
 #### Project Team Members : Pavana Manjunath(CWID : 885154195), Rohit Bhaskar Uday (CWID : 884451915 )
 # Project Description
 ####  We  created a Flask framework for building a Recipe Management RESTful-API. This API allows users to perform various CRUD operations, including robust error handling, strong JWT (JSON Web Token) authentication for secure user access, and secure file handling with validations on file types and sizes.This Readme file includes a detailed instructions for easy setup and deployment of python based template for creating Flask APIs.       
